@@ -1,5 +1,9 @@
 # GAdapter
 
+[![](https://jitpack.io/v/ITGungnir/GAdapter.svg)](https://jitpack.io/#ITGungnir/GAdapter)
+![License](https://img.shields.io/badge/License-Apache2.0-blue.svg)
+![](https://img.shields.io/badge/Email-itgungnir@163.com-ff69b4.svg)
+
 #### Common, easy-to-use adapter for RecyclerViews.
 
 `GAdapter`是一个为`RecyclerView`设计的简单通用的`Adapter`，它通过指令式的方式配置`ViewHolder`和绑定数据，使`ViewHolder`的可复用性大大提高。
@@ -26,7 +30,7 @@ buildscript {
 ```groovy
 dependencies {
     // ... Your codes
-    api "com.github.ITGungnir.GAdapter:adapter:$adapter_version"
+    implementation "com.github.ITGungnir:GAdapter:$adapter_version"
 }
 ```
 
