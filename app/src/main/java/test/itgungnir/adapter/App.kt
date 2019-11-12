@@ -32,7 +32,8 @@ class App : MultiDexApplication() {
 
         // Leak Canary
         if (LeakCanary.isInAnalyzerProcess(this)) {
-            LeakCanary.install(this)
+            return;
         }
+        LeakCanary.install(this)
     }
 }
