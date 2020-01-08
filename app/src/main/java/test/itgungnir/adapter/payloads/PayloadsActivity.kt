@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_payloads.*
 import my.itgungnir.adapter.adapter.GAdapter
-import my.itgungnir.adapter.ListItem
+import my.itgungnir.adapter.adapter.ListItem
 import my.itgungnir.adapter.getGAdapter
 import test.itgungnir.adapter.R
 import java.util.*

@@ -4,7 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Description:
+ * RecyclerView.ViewHolder
  *
  * Created by wangzhiyu1 on 2019-10-10
  */

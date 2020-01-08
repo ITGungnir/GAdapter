@@ -1,7 +1,7 @@
 package test.itgungnir.adapter.network
 
 import android.os.Bundle
-import my.itgungnir.adapter.ListItem
+import my.itgungnir.adapter.adapter.ListItem
 
 /**
  * Description:

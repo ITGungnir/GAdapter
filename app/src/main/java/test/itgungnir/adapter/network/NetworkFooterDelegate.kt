@@ -14,14 +14,14 @@ class NetworkFooterDelegate(private val failRetry: () -> Unit) : FooterDelegate(
 
     override fun layoutId(): Int = R.layout.view_list_footer
 
-    override fun onDefault(view: View) {
+    override fun onIdle(view: View) {
         view.footer_loading.visibility = View.GONE
         view.footer_text.visibility = View.VISIBLE
         view.footer_text.text = "上拉加载更多数据"
         view.setOnClickListener(null)
     }
 
-    override fun onLoading(view: View) {
+    override fun onProgressing(view: View) {
         view.footer_loading.visibility = View.VISIBLE
         view.footer_text.visibility = View.GONE
         view.setOnClickListener(null)
@@ -34,7 +34,7 @@ class NetworkFooterDelegate(private val failRetry: () -> Unit) : FooterDelegate(
         view.setOnClickListener(null)
     }
 
-    override fun onFailure(view: View) {
+    override fun onFailed(view: View) {
         view.footer_loading.visibility = View.GONE
         view.footer_text.visibility = View.VISIBLE
         view.footer_text.text = "加载失败，点击重试"

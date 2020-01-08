@@ -1,7 +1,7 @@
 package test.itgungnir.adapter.multiple
 
 import android.os.Bundle
-import my.itgungnir.adapter.BaseDelegate
+import my.itgungnir.adapter.adapter.BaseDelegate
 import my.itgungnir.adapter.adapter.VH
 import test.itgungnir.adapter.R
 

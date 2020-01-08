@@ -3,7 +3,7 @@ package test.itgungnir.adapter.payloads
 import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.item_payloads.view.*
-import my.itgungnir.adapter.BaseDelegate
+import my.itgungnir.adapter.adapter.BaseDelegate
 import my.itgungnir.adapter.adapter.VH
 import test.itgungnir.adapter.R
 

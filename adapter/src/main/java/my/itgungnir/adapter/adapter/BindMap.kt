@@ -1,10 +1,9 @@
 package my.itgungnir.adapter.adapter
 
-import my.itgungnir.adapter.Delegate
-import my.itgungnir.adapter.ListItem
-
 /**
- * Description:
+ * BindMap实体类
+ *
+ * 这个实体类用于标记ListItem和Delegate的一一对应关系
  *
  * Created by wangzhiyu1 on 2019-10-05
  */

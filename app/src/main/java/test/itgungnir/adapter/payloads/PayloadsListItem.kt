@@ -1,7 +1,7 @@
 package test.itgungnir.adapter.payloads
 
 import android.os.Bundle
-import my.itgungnir.adapter.ListItem
+import my.itgungnir.adapter.adapter.ListItem
 
 /**
  * Description: 需要局部刷新的数据需要实现ListItem接口并实现其三个方法
