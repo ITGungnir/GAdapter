@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import test.itgungnir.adapter.multiple.MultipleActivity
 import test.itgungnir.adapter.network.NetworkActivity
+import test.itgungnir.adapter.network.NetworkWithoutFooterActivity
 import test.itgungnir.adapter.payloads.PayloadsActivity
 import test.itgungnir.adapter.simple.SimpleActivity
 
@@ -33,6 +34,11 @@ class MainActivity : AppCompatActivity() {
         // 网络访问 + 分页
         btn_network.setOnClickListener {
             start(NetworkActivity::class.java)
+        }
+
+        // 网络访问，无分页
+        btn_network_without_footer.setOnClickListener {
+            start(NetworkWithoutFooterActivity::class.java)
         }
     }
 

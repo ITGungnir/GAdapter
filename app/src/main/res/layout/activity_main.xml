@@ -34,4 +34,11 @@
         android:text="Network requesting with paging"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btn_network_without_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Network requesting with paging (Without load more)"
+        android:textAllCaps="false" />
+
 </LinearLayout>

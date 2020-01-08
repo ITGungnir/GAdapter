@@ -214,6 +214,89 @@ val listAdapter = list.getGAdapter()
     .initialize()
 ```
 
+#### 4）添加对`LoadMore`的支持
+`GAdapter`在`v1.1.0`版本之后加入了对`LoadMore`（上拉加载更多）功能的支持。支持该功能需要做以下更改。
+
+第一步，创建`LoadMore`对应的`Footer`的`Delegate`，此`Delegate`必须继承自`my.itgungnir.adapter.footer.FooterDelegate`。可以参考本项目`Demo`中创建的`NetworkFooterDelegate`：
+```kotlin
+class NetworkFooterDelegate(private val failRetry: () -> Unit) : FooterDelegate() {
+
+    override fun layoutId(): Int = R.layout.view_list_footer
+
+    override fun onDefault(view: View) {
+        view.footer_loading.visibility = View.GONE
+        view.footer_text.visibility = View.VISIBLE
+        view.footer_text.text = "上拉加载更多数据"
+        view.setOnClickListener(null)
+    }
+
+    override fun onLoading(view: View) {
+        view.footer_loading.visibility = View.VISIBLE
+        view.footer_text.visibility = View.GONE
+        view.setOnClickListener(null)
+    }
+
+    override fun onNoMore(view: View) {
+        view.footer_loading.visibility = View.GONE
+        view.footer_text.visibility = View.VISIBLE
+        view.footer_text.text = "没有更多数据了"
+        view.setOnClickListener(null)
+    }
+
+    override fun onFailure(view: View) {
+        view.footer_loading.visibility = View.GONE
+        view.footer_text.visibility = View.VISIBLE
+        view.footer_text.text = "加载失败，点击重试"
+        view.setOnClickListener {
+            failRetry.invoke()
+        }
+    }
+}
+```
+创建的类需要实现`FooterDelegate`中的四个抽象方法：
+* onDefault(view: View)：渲染Footer的默认展示样式；
+* onLoading(view: View)：渲染上拉加载更多时的Loading样式；
+* onNoMore(view: View)：渲染无更多数据时的Footer样式；
+* onFailure(view: View)：渲染上拉加载失败时的Footer样式。
+
+第二步，通过`addFooterDelegate()`方法为`GAdapter`添加一个`Footer`的`Delegate`：
+```kotlin
+listAdapter = list.getGAdapter()
+    .addDelegate({ it is NetworkListItem }, NetworkDelegate())
+    .addFooterDelegate(NetworkFooterDelegate {
+        listAdapter.loadMoreRetry { loadMoreDataList() }
+    })
+    .initialize()
+```
+
+第三步，调用`RecyclerView`的扩展方法`setOnLoadMoreListener()`，设置上拉加载更多的回调：
+```kotlin
+setOnLoadMoreListener({ !refreshLayout.isRefreshing }) { 
+    loadMoreDataList()
+}
+```
+`setOnLoadMoreListener()`方法包含两个参数，第一个参数是一个返回`Boolean`类型的`Lambda`表达式，用于标识在什么情况下可以上拉加载，`Demo`中的代码表示在`SwipeRefreshLayout`正在刷新时
+不可以进行上拉加载；第二个参数是上拉加载的回调，即具体做上拉加载操作的代码。
+
+第四步，通过`GAdapter`提供的扩展方法刷新数据或改变`Footer`的状态。这些扩展方法包括以下几个：
+* refreshWithFooter(list: MutableList<ListItem>, hasMore: Boolean)：加载数据，第一个参数是新列表，第二个参数是是否还有下一页的标识，调用这个方法后，Footer的状态将根据hasMore参数的值
+被置为`IDLE`或`NO_MORE`状态；
+* loadMoreError()：当需要展示Footer的错误态时可以调用这个方法，调用这个方法后，Footer的状态将被置为`FAILED`状态；
+* loadMoreRetry(retry: () -> Unit)：重试，一般会在`FAILED`状态下提供用户点击重试的接口，点击重试时可以调用这个方法，调用后Footer的状态将被置为`PROGRESSING`状态。
+
+以上几个方法的主要作用是改变`Footer`的状态，`Footer`包含如下几种状态：
+* IDLE(0)：默认状态，在每一页加载完毕切判定还有更多数据时会被置为此状态；
+* PROGRESSING(1)：加载状态，正在执行上拉加载请求时会被置为此状态；
+* NO_MORE(2)：没有更多数据的状态，当最后一页加载完毕，判定为无更多数据时会被置为此状态；
+* FAILED(3)：加载失败状态，当数据请求发生异常时会被置为此状态（需要用户自己触发）。
+
+## Change Log
+#### v1.1.0
+* 加入对LoadMore的支持
+
+#### v1.0.1
+* 此版本不支持LoadMore
+
 ## License
 ```text
 Copyright 2019 ITGungnir

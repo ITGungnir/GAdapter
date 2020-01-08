@@ -30,5 +30,7 @@
 
         <activity android:name=".network.NetworkActivity" />
 
+        <activity android:name=".network.NetworkWithoutFooterActivity" />
+
     </application>
 </manifest>
