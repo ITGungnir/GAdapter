@@ -40,13 +40,13 @@ class NetworkActivity : AppCompatActivity() {
     private fun initViews() {
         // SwipeRefreshLayout
         refreshLayout.setOnRefreshListener {
-            // refreshDataList()
+            refreshDataList()
         }
         // RecyclerView
         list.apply {
             layoutManager = LinearLayoutManager(this@NetworkActivity)
             addItemDecoration(DividerItemDecoration(this@NetworkActivity, DividerItemDecoration.VERTICAL))
-            setOnLoadMoreListener { loadMoreDataList() }
+            setOnLoadMoreListener({ !refreshLayout.isRefreshing }) { loadMoreDataList() }
         }
         listAdapter = list.getGAdapter()
             .addDelegate({ it is NetworkListItem }, NetworkDelegate())

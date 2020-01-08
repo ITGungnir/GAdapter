@@ -13,7 +13,7 @@ val PL_FOOTER_STATUS = "PL_FOOTER_STATUS"
 
 fun RecyclerView.getGAdapter(): GAdapter = GAdapter(this)
 
-fun RecyclerView.setOnLoadMoreListener(onLoadMore: () -> Unit) {
+fun RecyclerView.setOnLoadMoreListener(canLoadMore: () -> Boolean, onLoadMore: () -> Unit) {
     addOnScrollListener(object : RecyclerView.OnScrollListener() {
         private var shouldLoadMore: Boolean = false
 
@@ -46,7 +46,7 @@ fun RecyclerView.setOnLoadMoreListener(onLoadMore: () -> Unit) {
             }
             val listAdapter = adapter!! as GAdapter
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (shouldLoadMore && listAdapter.currFooterStatus == FooterStatus.Status.IDLE) {
+                if (shouldLoadMore && canLoadMore() && listAdapter.currFooterStatus == FooterStatus.Status.IDLE) {
                     listAdapter.setFooterStatus(FooterStatus.Status.PROGRESSING)
                     listAdapter.refresh(justRefreshFooter = true)
                     onLoadMore()
