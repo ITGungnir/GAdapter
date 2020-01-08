@@ -67,17 +67,21 @@ class GAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<VH
     }
 
     fun refresh(dataList: MutableList<ListItem> = mutableListOf(), justRefreshFooter: Boolean = false) {
-        val newList = mutableListOf<ListItem>()
-        var targetList = dataList
-        if (justRefreshFooter) {
-            targetList = currDataList
+        GExecutor.instance.execute {
+            val newList = mutableListOf<ListItem>()
+            var targetList = dataList
+            if (justRefreshFooter) {
+                targetList = currDataList
+            }
+            targetList.forEach { newList.add(it) }
+            currDataList = targetList
+            if (newList.isNotEmpty() && bindMaps.any { it.delegate is FooterDelegate }) {
+                newList.add(FooterVO(status = currFooterStatus))
+            }
+            recyclerView.post {
+                differ.submitList(newList)
+            }
         }
-        targetList.forEach { newList.add(it) }
-        currDataList = targetList
-        if (newList.isNotEmpty() && bindMaps.any { it.delegate is FooterDelegate }) {
-            newList.add(FooterVO(status = currFooterStatus))
-        }
-        differ.submitList(newList)
     }
 
     fun setFooterStatus(footerStatus: FooterStatus.Status) {

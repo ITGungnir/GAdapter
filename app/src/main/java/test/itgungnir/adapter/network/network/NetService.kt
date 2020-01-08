@@ -16,4 +16,7 @@ interface NetService {
 
     @GET("article/list/{pageNo}/json")
     fun getArticleList(@Path("pageNo") pageNo: Int, @Query("cid") cid: Int): Single<Result<ArticleDTO>>
+
+    @GET("article/list/{pageNo}/json")
+    fun getArticleList(@Path("pageNo") pageNo: Int): Single<Result<ArticleDTO>>
 }

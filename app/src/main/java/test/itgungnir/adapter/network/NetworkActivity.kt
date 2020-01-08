@@ -61,7 +61,7 @@ class NetworkActivity : AppCompatActivity() {
     private fun refreshDataList() {
         currPageNo = 0
         NetUtil.withService(NetService::class.java)
-            .getArticleList(currPageNo, 60)
+            .getArticleList(currPageNo)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { refreshLayout.isRefreshing = true }
@@ -81,7 +81,7 @@ class NetworkActivity : AppCompatActivity() {
         }
         currPageNo++
         NetUtil.withService(NetService::class.java)
-            .getArticleList(currPageNo, 60)
+            .getArticleList(currPageNo)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map {
