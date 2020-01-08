@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/License-Apache2.0-blue.svg)
 ![](https://img.shields.io/badge/Email-itgungnir@163.com-ff69b4.svg)
 
-#### Common, easy-to-use adapter for RecyclerViews.
+## Common, easy-to-use adapter for RecyclerViews.
 
 `GAdapter`是一个为`RecyclerView`设计的简单通用的`Adapter`，它通过指令式的方式配置`ViewHolder`和绑定数据，使`ViewHolder`的可复用性大大提高。
 
@@ -12,7 +12,12 @@
 * 将`ViewHolder`与`RecyclerView.Adapter`解耦，提高`ViewHolder`的可复用性；
 * 利用`DiffUtil`的`diff`算法，计算最小改动路径，避免使用`notifyDataSetChanged()`方法重绘整个`RecyclerView`，也避免使用`notifyItemInserted()`等方法带来的额外人工计算成本和风险；
 * 重写`RecyclerView.Adapter`中三个参数的`onBindViewHolder()`方法，通过`payloads`的方式实现局部刷新；
-* 借助`Kotlin`语言的函数式特性，使代码更简洁、更优雅。
+* 借助`Kotlin`语言的函数式特性，使代码更简洁、更优雅；
+* 在`v1.1.0`版本之后加入了对`LoadMore`的支持。
+
+![局部刷新](images/payloads.gif)
+![多ViewType](images/multiple.gif)
+![loadMore分页](images/load_more.gif)
 
 ## 1、配置
 #### 1）在工程根目录下的`build.gradle`文件中添加仓库依赖：
