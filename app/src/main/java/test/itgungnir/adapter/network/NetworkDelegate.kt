@@ -3,7 +3,7 @@ package test.itgungnir.adapter.network
 import android.os.Bundle
 import kotlinx.android.synthetic.main.item_network.view.*
 import my.itgungnir.adapter.BaseDelegate
-import my.itgungnir.adapter.VH
+import my.itgungnir.adapter.adapter.VH
 import test.itgungnir.adapter.R
 
 /**

@@ -1,6 +1,7 @@
 package my.itgungnir.adapter
 
 import android.view.ViewGroup
+import my.itgungnir.adapter.adapter.VH
 
 /**
  * Description:

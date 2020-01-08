@@ -1,6 +1,6 @@
 package test.itgungnir.adapter.multiple
 
-import my.itgungnir.adapter.ImmutableListItem
+import my.itgungnir.adapter.adapter.ImmutableListItem
 
 object MultipleSearchBar : ImmutableListItem
 

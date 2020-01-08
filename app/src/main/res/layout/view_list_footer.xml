@@ -5,33 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="60dp">
 
-    <LinearLayout
-        android:id="@+id/footer_tips"
+    <TextView
+        android:id="@+id/footer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="horizontal"
-        tools:ignore="HardcodedText, UseCompoundDrawables">
+        android:text="上拉加载更多"
+        android:textColor="#8A8A8A"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
 
-        <ImageView
-            android:id="@+id/footer_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/svg_arrow_up" />
-
-        <TextView
-            android:id="@+id/footer_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="上拉加载更多"
-            android:textColor="#8A8A8A"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <ImageView
+    <ProgressBar
         android:id="@+id/footer_loading"
         android:layout_width="25dp"
         android:layout_height="25dp"

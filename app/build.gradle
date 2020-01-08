@@ -44,7 +44,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
     // Tools
-    implementation "com.scwang.smartrefresh:SmartRefreshLayout:$refresher_version"
     implementation "androidx.multidex:multidex:$dex_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leak_canary_version"

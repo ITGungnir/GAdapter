@@ -1,4 +1,4 @@
-package my.itgungnir.adapter
+package my.itgungnir.adapter.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

@@ -1,6 +1,7 @@
-package my.itgungnir.adapter
+package my.itgungnir.adapter.adapter
 
 import android.os.Bundle
+import my.itgungnir.adapter.ListItem
 
 /**
  * Description:

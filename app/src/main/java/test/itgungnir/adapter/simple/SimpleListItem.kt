@@ -1,6 +1,6 @@
 package test.itgungnir.adapter.simple
 
-import my.itgungnir.adapter.ImmutableListItem
+import my.itgungnir.adapter.adapter.ImmutableListItem
 
 /**
  * Description: 不需要刷新的数据可以直接实现ImmutableListItem接口

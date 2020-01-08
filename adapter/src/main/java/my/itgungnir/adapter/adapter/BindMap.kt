@@ -1,4 +1,7 @@
-package my.itgungnir.adapter
+package my.itgungnir.adapter.adapter
+
+import my.itgungnir.adapter.Delegate
+import my.itgungnir.adapter.ListItem
 
 /**
  * Description:

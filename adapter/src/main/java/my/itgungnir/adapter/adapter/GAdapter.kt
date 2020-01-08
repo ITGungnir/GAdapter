@@ -1,9 +1,14 @@
-package my.itgungnir.adapter
+package my.itgungnir.adapter.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import my.itgungnir.adapter.Delegate
+import my.itgungnir.adapter.ListItem
+import my.itgungnir.adapter.footer.FooterDelegate
+import my.itgungnir.adapter.footer.FooterStatus
+import my.itgungnir.adapter.footer.FooterVO
 
 /**
  * Description:
@@ -12,9 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class GAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<VH>() {
 
+    var currFooterStatus: FooterStatus.Status = FooterStatus.Status.IDLE
+
+    private var currDataList: MutableList<ListItem> = mutableListOf()
+
     private val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<ListItem>() {
         override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean =
-            newItem.isItemSameTo(oldItem)
+            oldItem.javaClass.name == newItem.javaClass.name && newItem.isItemSameTo(oldItem)
 
         override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean =
             newItem.isContentSameTo(oldItem)
@@ -57,9 +66,21 @@ class GAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<VH
         recyclerView.adapter = this
     }
 
-    fun refresh(dataList: MutableList<ListItem>) {
+    fun refresh(dataList: MutableList<ListItem> = mutableListOf(), justRefreshFooter: Boolean = false) {
         val newList = mutableListOf<ListItem>()
-        dataList.forEach { newList.add(it) }
+        var targetList = dataList
+        if (justRefreshFooter) {
+            targetList = currDataList
+        }
+        targetList.forEach { newList.add(it) }
+        currDataList = targetList
+        if (newList.isNotEmpty() && bindMaps.any { it.delegate is FooterDelegate }) {
+            newList.add(FooterVO(status = currFooterStatus))
+        }
         differ.submitList(newList)
+    }
+
+    fun setFooterStatus(footerStatus: FooterStatus.Status) {
+        this.currFooterStatus = footerStatus
     }
 }
