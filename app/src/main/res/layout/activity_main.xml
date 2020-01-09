@@ -41,4 +41,18 @@
         android:text="Network requesting with paging (Without load more)"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btn_grid_rcv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GridLayoutManager + Footer"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_staggered_rcv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="StaggeredGridLayoutManager + Footer"
+        android:textAllCaps="false" />
+
 </LinearLayout>

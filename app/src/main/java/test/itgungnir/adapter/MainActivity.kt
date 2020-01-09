@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import test.itgungnir.adapter.grid.GridActivity
 import test.itgungnir.adapter.multiple.MultipleActivity
 import test.itgungnir.adapter.network.NetworkActivity
 import test.itgungnir.adapter.network.NetworkWithoutFooterActivity
 import test.itgungnir.adapter.payloads.PayloadsActivity
 import test.itgungnir.adapter.simple.SimpleActivity
+import test.itgungnir.adapter.staggered.StaggeredActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +41,16 @@ class MainActivity : AppCompatActivity() {
         // 网络访问，无分页
         btn_network_without_footer.setOnClickListener {
             start(NetworkWithoutFooterActivity::class.java)
+        }
+
+        // 网格布局GridLayoutManager + Footer
+        btn_grid_rcv.setOnClickListener {
+            start(GridActivity::class.java)
+        }
+
+        // 瀑布流布局StaggeredGridLayoutManager + Footer
+        btn_staggered_rcv.setOnClickListener {
+            start(StaggeredActivity::class.java)
         }
     }
 

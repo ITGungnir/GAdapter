@@ -32,5 +32,9 @@
 
         <activity android:name=".network.NetworkWithoutFooterActivity" />
 
+        <activity android:name=".grid.GridActivity" />
+
+        <activity android:name=".staggered.StaggeredActivity" />
+
     </application>
 </manifest>
