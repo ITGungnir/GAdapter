@@ -24,7 +24,7 @@ ext {
     refresher_version = '1.1.0'
     jitpack_version = '2.1'
     dex_version = '2.0.1'
-    leak_canary_version = '1.6.3'
+    leak_canary_version = '2.1'
 }
 
 static def addRepos(RepositoryHandler handler) {
