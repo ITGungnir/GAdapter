@@ -37,12 +37,13 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     // AndroidX
-    implementation "androidx.appcompat:appcompat:$support_version"
+    implementation "androidx.appcompat:appcompat:$compat_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     // Support
     implementation "com.google.android.material:material:$material_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$refresh_version"
     // Tools
     implementation "androidx.multidex:multidex:$dex_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"

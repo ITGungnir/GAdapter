@@ -99,23 +99,17 @@ class GAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<VH
      *                          如果为false，表示不仅要更新Footer，还要更新数据列表，此时才会使用dataList
      */
     fun refresh(dataList: MutableList<ListItem> = mutableListOf(), justRefreshFooter: Boolean = false) {
-        // 开启一个线程池中的线程来处理数据列表，否则可能造成UI卡顿
-        GExecutor.instance.execute {
-            val newList = mutableListOf<ListItem>()
-            var targetList = dataList
-            if (justRefreshFooter) {
-                targetList = currDataList
-            }
-            targetList.forEach { newList.add(it) }
-            currDataList = targetList
-            if (newList.isNotEmpty() && bindMaps.any { it.delegate is FooterDelegate }) {
-                newList.add(FooterVO(status = currFooterStatus))
-            }
-            // post到主线程中更新RecyclerView中的UI展示
-            recyclerView.post {
-                differ.submitList(newList)
-            }
+        val newList = mutableListOf<ListItem>()
+        var targetList = dataList
+        if (justRefreshFooter) {
+            targetList = currDataList
         }
+        targetList.forEach { newList.add(it) }
+        currDataList = targetList
+        if (newList.isNotEmpty() && bindMaps.any { it.delegate is FooterDelegate }) {
+            newList.add(FooterVO(status = currFooterStatus))
+        }
+        differ.submitList(newList)
     }
 
     /**
