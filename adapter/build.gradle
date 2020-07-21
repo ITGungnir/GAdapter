@@ -23,10 +23,9 @@ android {
 
 dependencies {
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // AndroidX
-    implementation "androidx.core:core-ktx:$support_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly "androidx.core:core-ktx:$support_version"
     // Support
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    compileOnly "androidx.recyclerview:recyclerview:$recyclerview_version"
 }

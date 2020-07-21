@@ -13,7 +13,7 @@ class NetUtil {
 
     companion object {
 
-        fun <T> withService(serviceClz:Class<T>) = Retrofit.Builder()
+        fun <T> withService(serviceClz: Class<T>) = Retrofit.Builder()
             .baseUrl("https://www.wanandroid.com")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

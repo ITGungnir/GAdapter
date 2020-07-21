@@ -18,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -26,7 +30,7 @@ dependencies {
     implementation project(':adapter')
     // Kotlin
     implementation "androidx.core:core-ktx:$support_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     // Network
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
@@ -36,13 +40,13 @@ dependencies {
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
-    // AndroidX
-    implementation "androidx.appcompat:appcompat:$support_version"
+    // JetPack
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    // Support
     implementation "com.google.android.material:material:$material_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$refresh_layout_version"
     // Tools
     implementation "androidx.multidex:multidex:$dex_version"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
