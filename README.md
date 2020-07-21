@@ -296,6 +296,12 @@ setOnLoadMoreListener({ !refreshLayout.isRefreshing }) {
 * FAILED(3)：加载失败状态，当数据请求发生异常时会被置为此状态（需要用户自己触发）。
 
 ## Change Log
+#### v1.1.2
+* 优化Gradle依赖方式
+
+#### v1.1.1
+* 解决内存泄漏问题
+
 #### v1.1.0
 * 加入对LoadMore的支持
 
