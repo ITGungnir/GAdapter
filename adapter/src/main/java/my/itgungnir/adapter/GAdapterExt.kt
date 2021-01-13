@@ -19,7 +19,7 @@ fun GAdapter.addFooterDelegate(delegate: FooterDelegate) = addDelegate({ it is F
  * @param list 最新的数据列表，此列表需要是完整的数据列表，而不仅仅是最新一页的数据列表
  * @param hasMore 是否还有下一页
  */
-fun GAdapter.refreshWithFooter(list: MutableList<ListItem>, hasMore: Boolean) {
+fun GAdapter.refreshWithFooter(list: MutableList<out ListItem>, hasMore: Boolean) {
     // 通过是否还有下一页来更新Footer的展示状态
     if (hasMore) {
         setFooterStatus(FooterStatus.Status.IDLE)

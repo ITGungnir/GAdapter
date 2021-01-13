@@ -98,7 +98,7 @@ class GAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<VH
      *                          如果为true，表示仅更新Footer的状态，此时不会使用dataList，而是直接当前的数据列表currDataList；
      *                          如果为false，表示不仅要更新Footer，还要更新数据列表，此时才会使用dataList
      */
-    fun refresh(dataList: MutableList<ListItem> = mutableListOf(), justRefreshFooter: Boolean = false) {
+    fun refresh(dataList: MutableList<out ListItem> = mutableListOf(), justRefreshFooter: Boolean = false) {
         val newList = mutableListOf<ListItem>()
         var targetList = dataList
         if (justRefreshFooter) {
