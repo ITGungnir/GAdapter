@@ -297,7 +297,7 @@ setOnLoadMoreListener({ !refreshLayout.isRefreshing }) {
 
 ## Change Log
 #### v1.1.3
-* 支持ListItem泛型协变
+* 支持ListItem泛型
 
 #### v1.1.2
 * 优化Gradle依赖方式
