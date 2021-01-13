@@ -228,14 +228,14 @@ class NetworkFooterDelegate(private val failRetry: () -> Unit) : FooterDelegate(
 
     override fun layoutId(): Int = R.layout.view_list_footer
 
-    override fun onDefault(view: View) {
+    override fun onIdle(view: View) {
         view.footer_loading.visibility = View.GONE
         view.footer_text.visibility = View.VISIBLE
         view.footer_text.text = "上拉加载更多数据"
         view.setOnClickListener(null)
     }
 
-    override fun onLoading(view: View) {
+    override fun onProgressing(view: View) {
         view.footer_loading.visibility = View.VISIBLE
         view.footer_text.visibility = View.GONE
         view.setOnClickListener(null)
@@ -296,6 +296,9 @@ setOnLoadMoreListener({ !refreshLayout.isRefreshing }) {
 * FAILED(3)：加载失败状态，当数据请求发生异常时会被置为此状态（需要用户自己触发）。
 
 ## Change Log
+#### v1.1.3
+* 支持ListItem泛型协变
+
 #### v1.1.2
 * 优化Gradle依赖方式
 
