@@ -27,7 +27,7 @@ class GAdapter(private val recyclerView: RecyclerView) : RecyclerView.Adapter<VH
      * 当前列表中已有的所有ListItem的列表
      * 注意这个List中不包括FooterVO
      */
-    private var currDataList: MutableList<ListItem> = mutableListOf()
+    private var currDataList: MutableList<out ListItem> = mutableListOf()
 
     private val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<ListItem>() {
         /**
