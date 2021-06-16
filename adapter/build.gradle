@@ -1,17 +1,15 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 
-group = 'com.github.ITGungnir'
+group = 'com.github.itgungnir'
+version = '1.2.0'
 
 android {
-    compileSdkVersion target_sdk_version
+    compileSdkVersion Integer.parseInt(rootProject.targetSdkVersion)
     defaultConfig {
-        minSdkVersion min_sdk_version
-        targetSdkVersion target_sdk_version
-        versionCode version_code
-        versionName version_name
+        minSdkVersion Integer.parseInt(rootProject.minSdkVersion)
+        targetSdkVersion Integer.parseInt(rootProject.targetSdkVersion)
     }
     buildTypes {
         release {
@@ -23,9 +21,22 @@ android {
 
 dependencies {
     // Kotlin
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     // AndroidX
-    compileOnly "androidx.core:core-ktx:$support_version"
-    // Support
-    compileOnly "androidx.recyclerview:recyclerview:$recyclerview_version"
+    compileOnly "androidx.core:core-ktx:1.5.0"
+    // Views
+    compileOnly "androidx.recyclerview:recyclerview:1.2.1"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.itgungnir'
+                artifactId = 'adapter'
+                version = '1.2.0'
+            }
+        }
+    }
 }
