@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference
  */
 abstract class BaseDelegate<T : RecyclableItem> : Delegate {
 
-    override var adapterRef: WeakReference<GAdapter>? = null
+    override var adapterRef: WeakReference<RecyclerView.Adapter<ViewHolder>>? = null
 
     override var recyclerViewRef: WeakReference<RecyclerView>? = null
 

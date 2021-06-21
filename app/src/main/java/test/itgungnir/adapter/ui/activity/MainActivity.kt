@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun entrances() = mutableListOf(
         ButtonBean("多类型Item") { nav(MultipleItemActivity::class.java) },
-        ButtonBean("数据局部刷新") { nav(PayloadItemActivity::class.java) }
+        ButtonBean("数据局部刷新") { nav(PayloadItemActivity::class.java) },
+        ButtonBean("网络数据分页加载") { nav(NetworkItemActivity::class.java) }
     )
 
     override fun onDestroy() {

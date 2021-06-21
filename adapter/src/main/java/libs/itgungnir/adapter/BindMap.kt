@@ -9,6 +9,6 @@ package libs.itgungnir.adapter
  */
 data class BindMap(
     val type: Int,
-    val isItemForType: (data: RecyclableItem) -> Boolean,
+    val isItemForType: (data: RecyclableItem?) -> Boolean,
     val delegate: Delegate
 )

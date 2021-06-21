@@ -24,11 +24,6 @@ class GPagingAdapter : PagingDataAdapter<RecyclableItem, ViewHolder>(itemCompara
     private var recyclerViewRef: WeakReference<RecyclerView>? = null
 
     /**
-     * 当前列表中已有的所有RecyclableItem的列表（注意这个List中不包括FooterVO）
-     */
-    var currItems: MutableList<RecyclableItem> = mutableListOf()
-
-    /**
      * 存储适配器中所有RecyclableItem和Delegate的一一对应关系
      */
     private val bindMaps: MutableList<BindMap> = mutableListOf()
@@ -58,16 +53,18 @@ class GPagingAdapter : PagingDataAdapter<RecyclableItem, ViewHolder>(itemCompara
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        bindMaps.first { it.type == holder.itemViewType }.delegate
-            .onBindViewHolder(holder, getItem(position), mutableListOf())
+        getItem(position)?.let { item ->
+            bindMaps.first { it.type == holder.itemViewType }.delegate.onBindViewHolder(holder, item, mutableListOf())
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
         } else {
-            bindMaps.first { it.type == holder.itemViewType }.delegate
-                .onBindViewHolder(holder, getItem(position), payloads)
+            getItem(position)?.let { item ->
+                bindMaps.first { it.type == holder.itemViewType }.delegate.onBindViewHolder(holder, item, payloads)
+            }
         }
     }
 
@@ -77,7 +74,9 @@ class GPagingAdapter : PagingDataAdapter<RecyclableItem, ViewHolder>(itemCompara
         if (index < 0 || index >= itemCount) {
             return
         }
-        holder.onResumeCallback.invoke(holder, getItem(index))
+        getItem(index)?.let { item ->
+            holder.onResumeCallback.invoke(holder, item)
+        }
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
@@ -86,57 +85,12 @@ class GPagingAdapter : PagingDataAdapter<RecyclableItem, ViewHolder>(itemCompara
         if (index < 0 || index >= itemCount) {
             return
         }
-        holder.onPauseCallback.invoke(holder, getItem(index))
+        getItem(index)?.let { item ->
+            holder.onPauseCallback.invoke(holder, item)
+        }
     }
 
-    fun addDelegate(isViewForType: (RecyclableItem) -> Boolean, delegate: Delegate): GPagingAdapter = apply {
+    fun addDelegate(isViewForType: (RecyclableItem?) -> Boolean, delegate: Delegate): GPagingAdapter = apply {
         bindMaps.add(BindMap(bindMaps.size, isViewForType, delegate))
-    }
-
-    fun refresh(dataList: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
-        val newList = mutableListOf<RecyclableItem>()
-        dataList.forEach { newList.add(it) }
-        currItems.clear()
-        currItems.addAll(newList)
-        differ.submitList(newList, commitCallback)
-    }
-
-    fun applyAll(applyLambda: (RecyclableItem) -> RecyclableItem, commitCallback: () -> Unit = {}) {
-        val newList = currItems.map { applyLambda.invoke(it) }
-        refresh(newList.toMutableList(), commitCallback)
-    }
-
-    fun insert(index: Int = itemCount, data: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
-        if (index < 0 || index > currItems.size) {
-            return
-        }
-        currItems.addAll(index, data)
-        refresh(currItems, commitCallback)
-    }
-
-    fun append(data: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
-        currItems.addAll(data)
-        refresh(currItems, commitCallback)
-    }
-
-    fun update(index: Int, updateLambda: (RecyclableItem) -> RecyclableItem, commitCallback: () -> Unit = {}) {
-        if (index < 0 || index >= currItems.size) {
-            return
-        }
-        currItems[index] = updateLambda.invoke(currItems[index])
-        refresh(currItems, commitCallback)
-    }
-
-    fun remove(index: Int, commitCallback: () -> Unit = {}) {
-        if (index < 0 || index >= currItems.size) {
-            return
-        }
-        currItems.removeAt(index)
-        refresh(currItems, commitCallback)
-    }
-
-    fun removeAll(data: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
-        currItems.removeAll(data)
-        refresh(currItems, commitCallback)
     }
 }

@@ -103,7 +103,7 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
         holder.onPauseCallback.invoke(holder, items[index])
     }
 
-    fun addDelegate(isViewForType: (RecyclableItem) -> Boolean, delegate: Delegate): GAdapter = apply {
+    fun addDelegate(isViewForType: (RecyclableItem?) -> Boolean, delegate: Delegate): GAdapter = apply {
         bindMaps.add(BindMap(bindMaps.size, isViewForType, delegate))
     }
 
