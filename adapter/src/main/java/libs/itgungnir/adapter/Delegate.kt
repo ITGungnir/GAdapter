@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference
  */
 interface Delegate {
 
-    var adapterRef: WeakReference<RecyclerView.Adapter<ViewHolder>>?
+    var adapterRef: WeakReference<GAdapter>?
 
     var recyclerViewRef: WeakReference<RecyclerView>?
 

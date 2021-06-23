@@ -1,51 +1,44 @@
 package test.itgungnir.adapter.ui.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import libs.itgungnir.adapter.RecyclableItem
 import test.itgungnir.adapter.network.NetService
 import test.itgungnir.adapter.network.NetUtils
+import test.itgungnir.adapter.ui.delegate.NetworkItemBean
 
 class NetworkItemViewModel : ViewModel() {
 
-    private var currentNetworkItemResult: Flow<PagingData<RecyclableItem>>? = null
+    private var currPageNo: Int = 0
 
-    fun getNetworkItemList(): Flow<PagingData<RecyclableItem>> {
-        val newResult = getArticleListStream().cachedIn(viewModelScope)
-        currentNetworkItemResult = newResult
-        return newResult
+    val refreshingState = MutableLiveData<Boolean>()
+    val firstPageDataState = MutableLiveData<Pair<Boolean, List<RecyclableItem>>?>()
+    val otherPageDataState = MutableLiveData<Pair<Boolean, List<RecyclableItem>>?>()
+    val refreshErrorState = MutableLiveData<Exception?>()
+    val loadMoreErrorState = MutableLiveData<Exception?>()
+
+    fun refreshDataList() = viewModelScope.launch {
+        refreshingState.value = true
+        currPageNo = 0
+        try {
+            val response = NetUtils.withService(NetService::class.java).getArticleList(currPageNo).data
+            firstPageDataState.value = !response.over to response.datas.map { NetworkItemBean(it.id, it.title) }
+        } catch (e: Exception) {
+            refreshErrorState.value = e
+        } finally {
+            refreshingState.value = false
+        }
     }
 
-    private fun getArticleListStream(): Flow<PagingData<RecyclableItem>> = Pager(
-        config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-        pagingSourceFactory = { NetworkPagingSource() }
-    ).flow
-
-    private class NetworkPagingSource : PagingSource<Int, RecyclableItem>() {
-        override fun getRefreshKey(state: PagingState<Int, RecyclableItem>): Int? =
-            state.anchorPosition?.let { anchorPosition ->
-                state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                    ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
-            }
-
-        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RecyclableItem> {
-            val pageNo = params.key ?: 0
-            return try {
-                val response = NetUtils.withService(NetService::class.java).getArticleList(pageNo)
-                val prevKey = when (pageNo == 0) {
-                    true -> null
-                    else -> 0
-                }
-                val nextKey = when (response.data.over) {
-                    true -> null
-                    else -> pageNo + 1
-                }
-                LoadResult.Page(data = response.data.datas, prevKey = prevKey, nextKey = nextKey)
-            } catch (exception: Exception) {
-                return LoadResult.Error(exception)
-            }
+    fun loadMoreDataList() = viewModelScope.launch {
+        currPageNo++
+        try {
+            val response = NetUtils.withService(NetService::class.java).getArticleList(currPageNo).data
+            otherPageDataState.value = !response.over to response.datas.map { NetworkItemBean(it.id, it.title) }
+        } catch (e: Exception) {
+            loadMoreErrorState.value = e
         }
     }
 }

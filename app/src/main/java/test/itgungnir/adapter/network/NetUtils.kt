@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object NetUtils {
 
-    fun <T> withService(serviceClz: Class<T>) = Retrofit.Builder()
+    fun <T> withService(serviceClz: Class<T>): T = Retrofit.Builder()
         .baseUrl("https://www.wanandroid.com")
         .addConverterFactory(GsonConverterFactory.create())
         .build()

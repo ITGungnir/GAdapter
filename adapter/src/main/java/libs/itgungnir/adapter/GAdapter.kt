@@ -1,9 +1,10 @@
 package libs.itgungnir.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
+import libs.itgungnir.adapter.footer.FooterDelegate
+import libs.itgungnir.adapter.footer.FooterStatus
+import libs.itgungnir.adapter.footer.FooterVO
 import java.lang.ref.WeakReference
 
 /**
@@ -15,6 +16,11 @@ import java.lang.ref.WeakReference
  * Created by ITGungnir on 2019-10-05
  */
 class GAdapter : RecyclerView.Adapter<ViewHolder>() {
+
+    private var supportLoadMore: Boolean = false
+    private var currFooterStatus: FooterStatus.Status = FooterStatus.Status.IDLE
+    private var mCanLoadMoreCallback: (() -> Boolean)? = null
+    private var mLoadMoreCallback: (() -> Unit)? = null
 
     private var recyclerViewRef: WeakReference<RecyclerView>? = null
 
@@ -42,9 +48,71 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
      */
     private val bindMaps: MutableList<BindMap> = mutableListOf()
 
+    private val loadMoreListener by lazy {
+        object : RecyclerView.OnScrollListener() {
+            private var shouldLoadMore: Boolean = false
+
+            /**
+             * RecyclerView在滑动过程中会多次调用此方法
+             * 此方法用于判断当前RecyclerView的滚动位置是否支持进行上拉加载
+             * 即最后一个item是否完全展示出来了
+             */
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (mCanLoadMoreCallback?.invoke() == true) {
+                    recyclerView.adapter?.takeIf { it is GAdapter }?.let {
+                        // 适配不同的LayoutManager
+                        when (val manager = recyclerView.layoutManager) {
+                            is LinearLayoutManager ->
+                                shouldLoadMore = manager.findLastCompletelyVisibleItemPosition() == itemCount - 1
+                            is GridLayoutManager ->
+                                shouldLoadMore = manager.findLastCompletelyVisibleItemPosition() == itemCount - 1
+                            is StaggeredGridLayoutManager -> {
+                                var indexes = IntArray(manager.spanCount)
+                                indexes = manager.findLastCompletelyVisibleItemPositions(indexes)
+                                shouldLoadMore = indexes.contains(itemCount - 1)
+                            }
+                        }
+                        // 用户向下滑动时，将此值置为false
+                        if (dy <= 0) {
+                            shouldLoadMore = false
+                        }
+                    }
+                }
+            }
+
+            /**
+             * RecyclerView在每次滑动状态发生变化时（滚动/静止等）会调用这个方法
+             * 通过这个方法可以确定上拉加载的时机，即RecyclerView已经滑倒最底部了，且已经停止了滑动时
+             */
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (mCanLoadMoreCallback?.invoke() == true) {
+                    recyclerView.adapter?.takeIf { it is GAdapter }?.let {
+                        val listAdapter = it as? GAdapter ?: return
+                        // 只有在SCROLL_STATE_IDLE状态下才允许滑动
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            // RecyclerView在满足以下条件时才可以进行上拉加载：
+                            // 1. RecyclerView已经滑动到了最底部；
+                            // 2. 当前的外界因素满足上拉加载的条件，这一条是通过canLoadMore()方法决定的，是用户自己编写代码决定的；
+                            // 3. Footer当前的状态是IDLE状态
+                            if (shouldLoadMore && listAdapter.currFooterStatus == FooterStatus.Status.IDLE) {
+                                listAdapter.updateFooter(FooterStatus.Status.PROGRESSING)
+                                mLoadMoreCallback?.invoke()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerViewRef = WeakReference(recyclerView)
+        if (supportLoadMore) {
+            recyclerView.addOnScrollListener(loadMoreListener)
+        }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -107,11 +175,41 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
         bindMaps.add(BindMap(bindMaps.size, isViewForType, delegate))
     }
 
-    fun refresh(dataList: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
+    fun setFooterDelegate(canLoadMoreCallback: () -> Boolean, delegate: FooterDelegate) = apply {
+        supportLoadMore = true
+        mCanLoadMoreCallback = canLoadMoreCallback
+        addDelegate({ it is FooterVO }, delegate)
+    }
+
+    fun onLoadMore(loadMoreCallback: () -> Unit) = apply {
+        mLoadMoreCallback = loadMoreCallback
+    }
+
+    fun isLoadingMore() = currFooterStatus == FooterStatus.Status.PROGRESSING
+
+    fun refresh(dataList: List<RecyclableItem>, commitCallback: () -> Unit = {}) {
         val newList = mutableListOf<RecyclableItem>()
         dataList.forEach { newList.add(it) }
         currItems.clear()
         currItems.addAll(newList)
+        if (supportLoadMore) {
+            newList.add(FooterVO(currFooterStatus))
+        }
+        differ.submitList(newList, commitCallback)
+    }
+
+    fun refresh(dataList: List<RecyclableItem>, hasMore: Boolean, commitCallback: () -> Unit = {}) {
+        val newList = mutableListOf<RecyclableItem>()
+        dataList.forEach { newList.add(it) }
+        currItems.clear()
+        currItems.addAll(newList)
+        if (supportLoadMore) {
+            currFooterStatus = when (hasMore) {
+                true -> FooterStatus.Status.IDLE
+                else -> FooterStatus.Status.NO_MORE
+            }
+            newList.add(FooterVO(currFooterStatus))
+        }
         differ.submitList(newList, commitCallback)
     }
 
@@ -120,7 +218,7 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
         refresh(newList.toMutableList(), commitCallback)
     }
 
-    fun insert(index: Int = items.size, data: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
+    fun insert(index: Int = items.size, data: List<RecyclableItem>, commitCallback: () -> Unit = {}) {
         if (index < 0 || index > currItems.size) {
             return
         }
@@ -128,8 +226,14 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
         refresh(currItems, commitCallback)
     }
 
-    fun append(data: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
+    fun append(data: List<RecyclableItem>, hasMore: Boolean, commitCallback: () -> Unit = {}) {
         currItems.addAll(data)
+        if (supportLoadMore) {
+            currFooterStatus = when (hasMore) {
+                true -> FooterStatus.Status.IDLE
+                else -> FooterStatus.Status.NO_MORE
+            }
+        }
         refresh(currItems, commitCallback)
     }
 
@@ -141,6 +245,11 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
         refresh(currItems, commitCallback)
     }
 
+    fun updateFooter(footerStatus: FooterStatus.Status, commitCallback: () -> Unit = {}) {
+        currFooterStatus = footerStatus
+        refresh(currItems, commitCallback)
+    }
+
     fun remove(index: Int, commitCallback: () -> Unit = {}) {
         if (index < 0 || index >= currItems.size) {
             return
@@ -149,7 +258,7 @@ class GAdapter : RecyclerView.Adapter<ViewHolder>() {
         refresh(currItems, commitCallback)
     }
 
-    fun removeAll(data: MutableList<out RecyclableItem>, commitCallback: () -> Unit = {}) {
+    fun removeAll(data: List<RecyclableItem>, commitCallback: () -> Unit = {}) {
         currItems.removeAll(data)
         refresh(currItems, commitCallback)
     }

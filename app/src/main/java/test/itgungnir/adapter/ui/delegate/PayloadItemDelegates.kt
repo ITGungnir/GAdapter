@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import libs.itgungnir.adapter.BaseDelegate
-import libs.itgungnir.adapter.GAdapter
 import libs.itgungnir.adapter.RecyclableItem
 import libs.itgungnir.adapter.ViewHolder
 import test.itgungnir.adapter.R
@@ -112,7 +111,7 @@ class UserInfoDelegate : BaseDelegate<UserInfoDelegateBean>() {
         }
         holder.itemView.findViewById<ImageView>(R.id.checker)?.setOnClickListener {
             val index = holder.bindingAdapterPosition
-            (adapterRef?.get() as? GAdapter)
+            adapterRef?.get()
                 ?.update(index, { (it as? UserInfoDelegateBean)?.copy(selected = !it.selected) ?: it })
         }
     }

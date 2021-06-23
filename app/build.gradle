@@ -51,7 +51,6 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     // Tools
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
     implementation "androidx.multidex:multidex:2.0.1"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:2.7"
 }
